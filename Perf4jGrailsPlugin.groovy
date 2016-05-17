@@ -1,6 +1,5 @@
 import org.codehaus.groovy.grails.commons.GrailsClassUtils as GCU
 import grails.util.GrailsNameUtils as GNU
-import org.codehaus.groovy.grails.plugins.support.GrailsPluginUtils
 import grails.util.GrailsUtil
 
 import org.perf4j.log4j.Log4JStopWatch
@@ -11,9 +10,9 @@ import org.grails.plugins.perf4j.ControllerProfiledOptionsCache
 
 class Perf4jGrailsPlugin {
     // the plugin version
-    def version = "0.1.1"
+    def version = "0.2"
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "1.1 > *"
+    def grailsVersion = "2.4 > *"
     // the other plugins this plugin depends on
     def dependsOn = [:]
     def loadAfter = ['core', 'hibernate', 'services', 'controllers', 'logging', 'quartz']
@@ -22,19 +21,23 @@ class Perf4jGrailsPlugin {
             "grails-app/views/error.gsp", "web-app/**"
     ]
     def observe = [ 'controllers', 'services', 'hibernate', 'quartz' ]
-    
+
 
     // plugin metadata
-    def name = "perf4j"
+    def title = "JPerf Integration Plugin"
     def author = "Daniel Rinser"
     def authorEmail = "grails@danielrinser.de"
-    def title = "Perf4J Integration Plugin"
-    def description = '''This plugin integrates the Perf4J performance statistics library (http://perf4j.codehaus.org) into Grails applications. It provides idiomatic 
+    def description = '''This plugin integrates the JPerf performance statistics library (http://sovaa.github.io/jperf/devguide.html) into Grails applications. It provides idiomatic 
 ways to profile individual code blocks and automatic, customizable profiling of service methods.'''
 
     // URL to the plugin's documentation
     def documentation = "http://www.grails.org/plugin/perf4j"
 
+    def license = "APACHE"
+
+    def developers = [
+        [name: "Mihai Glont", email: "mihai.glont@ebi.ac.uk"]
+    ]
 
     // the name of the config property in services
     static final String PROFILED_PROPERTY = "profiled"
