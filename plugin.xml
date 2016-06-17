@@ -1,0 +1,12 @@
+<plugin name='perf4j' version='0.2.1' grailsVersion='2.4 &gt; *'>
+  <author>Daniel Rinser</author>
+  <authorEmail>grails@danielrinser.de</authorEmail>
+  <title>JPerf Integration Plugin</title>
+  <description>This plugin integrates the JPerf performance statistics library (http://sovaa.github.io/jperf/devguide.html) into Grails applications. It provides idiomatic 
+ways to profile individual code blocks and automatic, customizable profiling of service methods.</description>
+  <documentation>http://www.grails.org/plugin/perf4j</documentation>
+  <type>Perf4jGrailsPlugin</type>
+  <resources>
+    <resource>Perf4jFilters</resource>
+  </resources>
+</plugin>
