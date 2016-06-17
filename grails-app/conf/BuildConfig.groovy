@@ -36,7 +36,11 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         // runtime 'mysql:mysql-connector-java:5.1.27'
-        compile "net.jperf:jperf:1.0.3"
+        //compile "net.jperf:jperf:1.0.3"
+
+        //maven does not pick up the jar from target/work/plugins/perf4j-*/lib
+        compile 'org.perf4j:perf4j:0.9.16'
+
     }
 
     plugins {
