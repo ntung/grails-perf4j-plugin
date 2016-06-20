@@ -19,14 +19,15 @@ public class Perf4jFilters {
     
     def filters = {
         def log = Logger.getLogger(Perf4jFilters)
-        
         all(controller:'*', action: '*') {
+        try {
+            def pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
             before = {
-                if(Perf4jGrailsPlugin.profilingEnabled && Perf4jGrailsPlugin.profilingCurrentlyEnabled) {
+                if(pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
                     if(controllerName) {
                         def action = actionName ?: 'index'
                         def controller = GNU.getClassName(controllerName, "Controller")
-                    
+
                         def controllerClass = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
                         if(controllerClass) {
                             def profiled = GCU.getStaticPropertyValue(controllerClass.clazz, PROFILED_PROPERTY)
@@ -41,7 +42,7 @@ public class Perf4jFilters {
                             }
                             else if(profiled instanceof Closure) {
                                 log.trace "Closure type profiled property in ${controller}"
-                            
+
                                 if(!controllerProfiledOptionsCache.hasOptionsForController(controllerName)) {
                                     log.trace "Evaluating profiled DSL in ${controller}"
                                     controllerProfiledOptionsCache.evaluateDSL(controllerName, profiled)
@@ -62,7 +63,7 @@ public class Perf4jFilters {
 
             
             after = {
-                if(Perf4jGrailsPlugin.profilingEnabled && Perf4jGrailsPlugin.profilingCurrentlyEnabled) {
+                if(pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
                     def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
             
                     if(!includeView) {
@@ -73,14 +74,18 @@ public class Perf4jFilters {
 
 
             afterView = {
-                if(Perf4jGrailsPlugin.profilingEnabled && Perf4jGrailsPlugin.profilingCurrentlyEnabled) {
+                if(pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
                     def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
-            
+
                     if(includeView) {
                         stopStopwatch(request)
                     }
                 }
             }
+        } catch (Throwable e) {
+            log.error("Cannot find class Perf4jGrailsPlugin - Double check", e)
+            return
+        }
         }
     }
     
