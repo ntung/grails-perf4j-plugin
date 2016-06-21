@@ -18,9 +18,9 @@ public class Perf4jFilters {
     def filters = {
         def log = Logger.getLogger(Perf4jFilters)
         all(controller:'*', action: '*') {
-                before = {
-                    def pluginDescriptor
-                    try {
+            before = {
+                def pluginDescriptor
+                try {
                     pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
                     if (pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
                         if (controllerName) {
@@ -60,26 +60,26 @@ public class Perf4jFilters {
                 } catch (Throwable e) {
                     log.error("Cannot find class Perf4jGrailsPlugin", e)
                     return
+                }
+            }
+            after = {
+                def pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
+                if (pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
+                    def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
+                    if (!includeView) {
+                        stopStopwatch(request)
                     }
                 }
-                after = {
-                    def pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
-                    if (pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
-                        def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
-                        if (!includeView) {
-                            stopStopwatch(request)
-                        }
+            }
+            afterView = {
+                def pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
+                if (pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
+                    def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
+                    if (includeView) {
+                        stopStopwatch(request)
                     }
                 }
-                afterView = {
-                    def pluginDescriptor = Class.forName("Perf4jGrailsPlugin")?.newInstance()
-                    if (pluginDescriptor.profilingEnabled && pluginDescriptor.profilingCurrentlyEnabled) {
-                        def includeView = request[INCLUDE_VIEW_REQUEST_KEY]
-                        if (includeView) {
-                            stopStopwatch(request)
-                        }
-                    }
-                }
+            }
         }
     }
 
